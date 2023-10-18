@@ -147,11 +147,16 @@ function calculateAssignmentScore(submissionScore) {
 
 }
 
-function isSubmissionLate() {
+function isSubmissionLate(submitted_at, due_at) {
 
+}
+
+function applyLatePenalty(originalScore){
+    return (originalScore-(originalScore * .10))
 }
 const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
   
 console.log(result);
 console.log(getLearnerSubmissions(125, LearnerSubmissions))
 console.log(getAssignmentInfoById(3, AssignmentGroup))
+console.log(applyLatePenalty(87.3))

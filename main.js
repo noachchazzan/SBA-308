@@ -1,28 +1,3 @@
-/*let courseInfo = 
-{
-    "id": number,
-    "name": string,
-}
-
-let assignmentInfo = {
-    "id": number, 
-    "name": string, 
-    // the due date for the assignment 
-    "due_at": Date,
-}
-let assignmentGroup = 
-{
-    "id": 0,
-    "name": "group_n",
-    "course_id": 101,
-    "group_weight": 0,
-    "assignments": [assignmentInfo],
-}
-console.log(courseInfo)
-assignmentInfo["id"]=123;
-console.log(assignmentInfo)
-*/
-
 // The provided course information.
 const CourseInfo = {
     id: 451,
@@ -104,7 +79,19 @@ const CourseInfo = {
   function getLearnerData(course, ag, submissions) {
     // here, we would process this data to achieve the desired result.
     // check if there is proper course_id with respec to 
-    
+    let learners = [];
+    let learnSubs = [];
+    for (let i in submissions) {
+        if (!learners.includes(submissions[i].learner_id)){
+            learners.push(submissions[i].learner_id)
+        }
+        
+    }
+    for (let i in learners){
+        learnSubs.push(getLearnerSubmissions(learners[i], LearnerSubmissions))
+    }
+    console.log(learners);
+    console.log(learnSubs);
     const result = [
       {
         id: 125,
@@ -148,7 +135,10 @@ function calculateAssignmentScore(submissionScore, assignmentMaxScore) {
 }
 
 function isSubmissionLate(submitted_at, due_at) {
-    
+    if (submitted_at > due_at) {
+        return true;
+    }
+    return false;
 }
 
 function applyLatePenalty(originalScore){

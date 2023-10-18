@@ -143,12 +143,12 @@ function getAssignmentInfoById(assignmentId, AssignmentGroup) {
     return null;
 }
 
-function calculateAssignmentScore(submissionScore) {
-
+function calculateAssignmentScore(submissionScore, assignmentMaxScore) {
+    return (submissionScore/assignmentMaxScore);
 }
 
 function isSubmissionLate(submitted_at, due_at) {
-
+    
 }
 
 function applyLatePenalty(originalScore){

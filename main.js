@@ -77,6 +77,7 @@ const CourseInfo = {
   ];
   
   function getLearnerData(course, ag, submissions) {
+    try {
     if (course.id != ag.course_id) {
       throw new Error("Invalid input: AssignmentGroup does not belong to course");
     }
@@ -114,22 +115,9 @@ const CourseInfo = {
       }
       results.push(learnerResult);
     }
-    /*
-    const result = [
-      {
-        id: 125,
-        avg: 0.985, // (47 + 150) / (50 + 150)
-        1: 0.94, // 47 / 50
-        2: 1.0 // 150 / 150
-      },
-      {
-        id: 132,
-        avg: 0.82, // (39 + 125) / (50 + 150)
-        1: 0.78, // 39 / 50
-        2: 0.833 // late: (140 - 15) / 150
-      }
-    ];*/
     return results;
+  } catch(e){console.error(error.message);
+    return null}
   }
   
 function applyLatePenalty(originalScore, maxScore) {
@@ -165,6 +153,23 @@ function isSubmissionLate(submitted_at, due_at) {
     }
     return false;
 }
-
 const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
 console.log(result)
+
+    /*
+    const result = [
+      {
+        id: 125,
+        avg: 0.985, // (47 + 150) / (50 + 150)
+        1: 0.94, // 47 / 50
+        2: 1.0 // 150 / 150
+      },
+      {
+        id: 132,
+        avg: 0.82, // (39 + 125) / (50 + 150)
+        1: 0.78, // 39 / 50
+        2: 0.833 // late: (140 - 15) / 150
+      }
+    ];*/
+
+    

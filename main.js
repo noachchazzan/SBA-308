@@ -81,17 +81,19 @@ const CourseInfo = {
     // check if there is proper course_id with respec to 
     let learners = [];
     let learnSubs = [];
+    let assignmentInfo = [];
+    let results = [];
     for (let i in submissions) {
         if (!learners.includes(submissions[i].learner_id)){
             learners.push(submissions[i].learner_id)
-        }
-        
+        } 
     }
-    for (let i in learners){
-        learnSubs.push(getLearnerSubmissions(learners[i], LearnerSubmissions))
+    for (let i = 0; i < learners.length; i++) {
+      let new_id = {id: learners[i], avg: Number};
+      results.push(new_id);
+      learnSubs.push(getLearnerSubmissions(learners[i], LearnerSubmissions)); 
+
     }
-    console.log(learners);
-    console.log(learnSubs);
     const result = [
       {
         id: 125,
@@ -106,15 +108,14 @@ const CourseInfo = {
         2: 0.833 // late: (140 - 15) / 150
       }
     ];
-  
-    return result;
+    return results;
   }
   
 function getLearnerSubmissions(learnerId, submissionsArray) {
     let narr = [];
     for (let i of submissionsArray) {
         if (learnerId == i["learner_id"]) {
-            narr.push(i["submission"])
+            narr.push(i)
         }
     }
     return narr;
@@ -145,8 +146,5 @@ function applyLatePenalty(originalScore){
     return (originalScore-(originalScore * .10))
 }
 const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
-  
-console.log(result);
+console.log(result)
 console.log(getLearnerSubmissions(125, LearnerSubmissions))
-console.log(getAssignmentInfoById(3, AssignmentGroup))
-console.log(applyLatePenalty(87.3))

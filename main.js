@@ -78,22 +78,40 @@ const CourseInfo = {
   
   function getLearnerData(course, ag, submissions) {
     // here, we would process this data to achieve the desired result.
-    // check if there is proper course_id with respec to 
+    // check if there is proper course_id with respect to 
     let learners = [];
-    let learnSubs = [];
-    let assignmentInfo = [];
     let results = [];
     for (let i in submissions) {
         if (!learners.includes(submissions[i].learner_id)){
             learners.push(submissions[i].learner_id)
         } 
     }
-    for (let i = 0; i < learners.length; i++) {
-      let new_id = {id: learners[i], avg: Number};
-      results.push(new_id);
-      learnSubs.push(getLearnerSubmissions(learners[i], LearnerSubmissions)); 
-
+    for (let learnerId of learners) {
+      let learnersSubmissions = getLearnerSubmissions(learnerId, submissions);
+      let learnerResult = {
+        id: learnerId,
+        avg: 0
+      };
+      let totalWeight = 0;
+      for (let submission of learnersSubmissions) {
+        let assignment = getAssignmentInfoById(submission.assignment_id, ag);
+        if (assignment) {
+          let score = submission.submission.score;
+          if (isSubmissionLate(submission.submitted_at, assignment.due_at)) {
+            score = applyLatePenalty(score);
+          }
+          let scorePercentage = calculateAssignmentScore(score, assignment.points_possible);
+          learnerResult[assignment.id] = scorePercentage;
+          learnerResult.avg += scorePercentage * assignment.points_possible;
+          totalWeight += assignment.points_possible;
+        }
+      }
+      if (totalWeight > 0) {
+        learnerResult.avg /= totalWeight;
+      }
+      results.push(learnerResult);
     }
+    /*
     const result = [
       {
         id: 125,
@@ -107,7 +125,7 @@ const CourseInfo = {
         1: 0.78, // 39 / 50
         2: 0.833 // late: (140 - 15) / 150
       }
-    ];
+    ];*/
     return results;
   }
   
@@ -147,4 +165,3 @@ function applyLatePenalty(originalScore){
 }
 const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
 console.log(result)
-console.log(getLearnerSubmissions(125, LearnerSubmissions))

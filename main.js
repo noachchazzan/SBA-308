@@ -77,6 +77,9 @@ const CourseInfo = {
   ];
   
   function getLearnerData(course, ag, submissions) {
+    if (course.id != ag.course_id) {
+      throw new Error("Invalid input: AssignmentGroup does not belong to course");
+    }
     // here, we would process this data to achieve the desired result.
     // check if there is proper course_id with respect to 
     let learners = [];
@@ -95,19 +98,19 @@ const CourseInfo = {
       let totalWeight = 0;
       for (let submission of learnersSubmissions) {
         let assignment = getAssignmentInfoById(submission.assignment_id, ag);
-        if (assignment) {
+        if (assignment && new Date(assignment.due_at) < new Date()) { // Checks for future due dates
           let score = submission.submission.score;
-          if (isSubmissionLate(submission.submitted_at, assignment.due_at)) {
-            score = applyLatePenalty(score);
+          if (isSubmissionLate(submission.submission.submitted_at, assignment.due_at)) {
+            score = applyLatePenalty(score, assignment.points_possible);
           }
           let scorePercentage = calculateAssignmentScore(score, assignment.points_possible);
-          learnerResult[assignment.id] = scorePercentage;
+          learnerResult[assignment.id] = parseFloat(scorePercentage.toFixed(3)); // formats scores % to 1 decimal point
           learnerResult.avg += scorePercentage * assignment.points_possible;
           totalWeight += assignment.points_possible;
         }
       }
       if (totalWeight > 0) {
-        learnerResult.avg /= totalWeight;
+        learnerResult.avg = parseFloat(((learnerResult.avg / totalWeight) * 100).toFixed(3));
       }
       results.push(learnerResult);
     }
@@ -129,6 +132,9 @@ const CourseInfo = {
     return results;
   }
   
+function applyLatePenalty(originalScore, maxScore) {
+  return Math.max(0, originalScore - (maxScore * 0.1));
+}
 function getLearnerSubmissions(learnerId, submissionsArray) {
     let narr = [];
     for (let i of submissionsArray) {
@@ -160,8 +166,5 @@ function isSubmissionLate(submitted_at, due_at) {
     return false;
 }
 
-function applyLatePenalty(originalScore){
-    return (originalScore-(originalScore * .10))
-}
 const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
 console.log(result)

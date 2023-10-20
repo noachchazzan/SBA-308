@@ -88,7 +88,7 @@ const CourseInfo = {
     for (let i in submissions) {
         if (!learners.includes(submissions[i].learner_id)){
             learners.push(submissions[i].learner_id)
-        } 
+        } else {continue;}
     }
     for (let learnerId of learners) {
       let learnersSubmissions = getLearnerSubmissions(learnerId, submissions);
@@ -111,13 +111,15 @@ const CourseInfo = {
         }
       }
       if (totalWeight > 0) {
-        learnerResult.avg = parseFloat(((learnerResult.avg / totalWeight) * 100).toFixed(3));
+        learnerResult.avg = parseFloat(learnerResult.avg / totalWeight).toFixed(3);
       }
       results.push(learnerResult);
     }
     return results;
-  } catch(e){console.error(error.message);
-    return null}
+  } catch(e){
+      console.error(error.message);
+      return null;
+    }
   }
   
 function applyLatePenalty(originalScore, maxScore) {

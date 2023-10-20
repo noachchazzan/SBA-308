@@ -182,9 +182,21 @@ function isSubmissionLate(submitted_at, due_at) {
     }
     return false;
 }
-const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
-console.log(result)
-
+const results = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
+console.log(results)
+/*
+console.log("Results: ");
+results.forEach(result => {
+  console.log(`\n🎓 Learner ID: ${result.id}`);
+  console.log(`📊 Average Score: ${result.avg}`);
+  Object.keys(result).forEach(key => {
+    if (key != 'id' && key !== 'avg') {
+      console.log(`📝 Assignment ${key}: ${result[key]}`);
+    }
+  });
+});
+*/
+// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
     /*
     const result = [
       {
